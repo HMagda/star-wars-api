@@ -1,0 +1,28 @@
+services:
+  api:
+    build: ./backend
+    container_name: starwars_api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    environment:
+      MONGODB_URI: "mongodb://root:example@mongodb:27017/starwars?authSource=admin"
+      SWAPI_BASE_URL: "https://swapi.tech/api"
+      CACHE_TTL_HOURS: "24"
+      NODE_ENV: "development"
+    command: npm run start:dev
+
+  mongodb:
+    image: mongo:6
+    container_name: starwars_mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
